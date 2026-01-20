@@ -1,0 +1,12 @@
+﻿<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grB" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f08c3f" />
+      <stop offset="100%" stop-color="#ffcd4a" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="28" fill="url(#grB)" />
+  <path d="M60 110l30 30 50-70" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="100" y="50" text-anchor="middle" font-size="28" font-weight="700" fill="#ffffff" font-family="Space Grotesk, sans-serif">ROHS</text>
+  <text x="100" y="170" text-anchor="middle" font-size="14" fill="#ffffff" font-family="Space Grotesk, sans-serif">Certificaat</text>
+</svg>

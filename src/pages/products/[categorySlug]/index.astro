@@ -1,0 +1,893 @@
+---
+import Header from '../../../components/Header.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { categories, products } from '../../../data/products';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return categories.map((item) => ({
+    params: { categorySlug: item.slug },
+  }));
+}
+
+const categorySlug = Astro.params.categorySlug;
+const category = categories.find((item) => item.slug === categorySlug);
+
+if (!category) {
+  throw new Error(`Unknown category: ${categorySlug}`);
+}
+
+const productsByCategory = products.filter((item) => item.category === categorySlug);
+
+const detailContentByCategory = {
+  'dtf-inkten': {
+    heroProduct: 'DTF Inkt Producten',
+    heroSubtitle:
+      'Hoogwaardige DTF inkten voor textielprint, met uitstekende kleurvastheid en betrouwbare prestaties.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2024/06/ink-dtf-1.jpg',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2024/06/ink-dtf-1.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2025/01/60CM-DTF-FILM-ROLL.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2025/01/DTF-Powder-3.webp'
+    ],
+    overview: [
+      'Breed assortiment aan DTF inkten voor verschillende toepassingen',
+      'Gecertificeerde kwaliteit met uitstekende wasvastheid',
+      'Compatibel met alle bekende DTF-printers',
+      'Snelle droging en hoge drukcapaciteit',
+      'Eenvoudige gebruik en onderhoud',
+    ],
+    callouts: [
+      { label: 'Levertijd', value: '3-5 dagen voor samples, 15-20 dagen bulk' },
+      { label: 'Betaling', value: 'TT / PayPal / Credit Card' },
+      { label: 'Verzending', value: 'DHL / FedEx / UPS / Zeevracht' },
+      { label: 'Certificaten', value: 'ISO 9001, CE, REACH' },
+      { label: 'Kwaliteitscontrole', value: 'Per batch getest' },
+    ],
+    features: [
+      {
+        title: 'Uitstekende kleurvastheid',
+        text: 'Onze DTF inkten bieden uitstekende kleurvastheid na wassen en belichting, volgens internationale normen.',
+      },
+      {
+        title: 'Compatibel met alle DTF-printers',
+        text: 'Onze inkten werken met alle bekende DTF-printers en printkoppen, inclusief Epson, Mimaki, Ricoh en Roland.',
+      },
+      {
+        title: 'Snelle droging',
+        text: 'Snelle droging zorgt voor efficiënte productie en minimale wachttijden, zelfs bij hoge drukvolumes.',
+      },
+      {
+        title: 'Hoge drukcapaciteit',
+        text: 'Elke batch is getest voor hoge drukcapaciteit, zodat u kunt produceren zonder onderbrekingen.',
+      },
+      {
+        title: 'Eenvoudige onderhoud',
+        text: 'Onze inkten zijn gemakkelijk te onderhouden en voorkomen verstopping van printkoppen.',
+      },
+      {
+        title: 'Milieuvriendelijk',
+        text: 'Onze inkten voldoen aan EU-milieunormen en zijn vrij van giftige stoffen.',
+      },
+    ],
+    specTable: [
+      { label: 'Type', value: 'Waterbasis pigmentinkt' },
+      { label: 'Kleurset', value: 'CMYK + Wit' },
+      { label: 'Consistentie', value: 'Lichtere vloeistof' },
+      { label: 'Viscositeit', value: '12-15 cps @ 25°C' },
+      { label: 'pH-waarde', value: '8.0-9.0' },
+      { label: 'Drukspoelingstemperatuur', value: '40-50°C' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '12 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson I3200', nozzle: '98.5%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson I3200', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson I3200', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson I3200', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Wit', printhead: 'Epson I3200', nozzle: '98.7%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.5/5', dry: '5/5', light: '4/5', wash: '4.5/5' },
+      { color: 'Magenta', wet: '4.5/5', dry: '5/5', light: '4/5', wash: '4.5/5' },
+      { color: 'Geel', wet: '4.5/5', dry: '5/5', light: '4/5', wash: '4.5/5' },
+      { color: 'Zwart', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Wit', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+    ],
+    applications: [
+      'Textiel en kleding (katoen, polyester, gemengd)',
+      'Merchandising en promoartikelen',
+      'Sportkleding en accessoires',
+      'Interieurtextiel en vloerkleden',
+      'Gespecialiseerde toepassingen zoals handtassen en schoenen',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Wassvastheid en kleurfading',
+      'Droogtijd en productiviteit',
+      'Kwaliteit-prijsverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw DTF-inkten gebruiken?',
+        answer: 'Onze DTF-inkten zijn compatibel met Epson, Mimaki, Ricoh, Roland DTF-printers en alle DTF-gemodificeerde printopstellingen.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y / W). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw DTF-inkten?',
+        answer: 'Onze DTF-inkten hebben een houdbaarheid van 12 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Kunnen we een sample aanvragen voordat we bestellen?',
+        answer: 'Ja, we bieden samples aan voor evaluatie. Neem contact met ons op voor meer informatie.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'uv-dtf-inkten': {
+    heroProduct: 'UV DTF Ink Producten',
+    heroSubtitle:
+      'Premium UV DTF inkten voor harde oppervlakken, met levendige kleuren en sterke hechting.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2025/07/UV-DTF-Ink-5.webp',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2025/07/DTF-UV-Ink.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2025/07/UV-DTF-Ink-2.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2025/07/UV-DTF-printed-cup.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2025/07/UV-DTF-Ink-4.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2025/02/Precision-Color-Matching-with-Pantone®-System.webp'
+    ],
+    overview: [
+      'Breed assortiment aan UV DTF inkten voor verschillende toepassingen',
+      'Gecertificeerde kwaliteit met uitstekende kleurechtheid',
+      'Snelle verharding onder UV-licht',
+      'Sterke hechting op diverse oppervlakken',
+      'Snelle verharding onder UV-licht',
+    ],
+    specTable: [
+      { label: 'Type', value: 'UV-curabele inkt' },
+      { label: 'Kleurset', value: 'CMYK + Wit' },
+      { label: 'Consistentie', value: 'Medium vloeistof' },
+      { label: 'Viscositeit', value: '10-14 cps @ 25°C' },
+      { label: 'pH-waarde', value: '7.0-8.0' },
+      { label: 'Vercuringstijd', value: '<2 seconden onder UV-licht' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '12 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson XP600', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson XP600', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson XP600', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson XP600', nozzle: '99.5%', fluency: 'Uitstekend' },
+      { color: 'Wit', printhead: 'Epson XP600', nozzle: '98.5%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Magenta', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+      { color: 'Geel', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Zwart', wet: '5/5', dry: '5/5', light: '5/5', wash: '5/5' },
+      { color: 'Wit', wet: '4.9/5', dry: '5/5', light: '4.8/5', wash: '4.9/5' },
+    ],
+    applications: [
+      'Glas en keramiek',
+      'Plastic en metaal',
+      'Hout en composites',
+      'Leer en textiel met harde oppervlakken',
+      'Karton en verpakking',
+      'Signage en displays',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Hechtingsterkte op diverse oppervlakken',
+      'UV-bestendigheid',
+      'Prijskwaliteitverhouding',
+      'Milieuvriendelijkheid',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw UV DTF-inkten gebruiken?',
+        answer: 'Onze UV DTF-inkten zijn compatibel met alle bekende UV DTF-printers, inclusief Epson, Mimaki, Ricoh en Roland.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y / W). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw UV DTF-inkten?',
+        answer: 'Onze UV DTF-inkten hebben een houdbaarheid van 12 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Op welke oppervlakken kunnen uw UV DTF-inkten worden gebruikt?',
+        answer: 'Onze UV DTF-inkten kunnen worden gebruikt op diverse oppervlakken, inclusief glas, plastic, metaal, hout, keramiek en leer.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'dtg-inkten': {
+    heroProduct: 'DTG Inkt Producten',
+    heroSubtitle:
+      'Premium DTG inkten voor textielprint, met zachte handfeel en hoge wasvastheid.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409692-画板-1-拷贝-5.jpg',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409692-画板-1-拷贝-5.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409693-画板-1-拷贝.jpg'
+    ],
+    overview: [
+      'Breed assortiment aan DTG inkten voor verschillende toepassingen',
+      'Gecertificeerde kwaliteit met uitstekende kleurechtheid',
+      'Zachte handfeel en hoge wasvastheid',
+      'Snel droging en hoge drukcapaciteit',
+      'Compatibel met alle bekende DTG-printers',
+    ],
+    specTable: [
+      { label: 'Type', value: 'Waterbasis pigmentinkt' },
+      { label: 'Kleurset', value: 'CMYK + Wit' },
+      { label: 'Consistentie', value: 'Lichtere vloeistof' },
+      { label: 'Viscositeit', value: '12-15 cps @ 25°C' },
+      { label: 'pH-waarde', value: '8.0-9.0' },
+      { label: 'Drukspoelingstemperatuur', value: '40-50°C' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '12 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson XP600', nozzle: '98.5%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson XP600', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson XP600', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson XP600', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Wit', printhead: 'Epson XP600', nozzle: '98.7%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.5/5', dry: '5/5', light: '4/5', wash: '4.5/5' },
+      { color: 'Magenta', wet: '4.5/5', dry: '5/5', light: '4/5', wash: '4.5/5' },
+      { color: 'Geel', wet: '4.5/5', dry: '5/5', light: '4/5', wash: '4.5/5' },
+      { color: 'Zwart', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Wit', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+    ],
+    applications: [
+      'Textiel en kleding (katoen, polyester, gemengd)',
+      'Merchandising en promoartikelen',
+      'Sportkleding en accessoires',
+      'Interieurtextiel en vloerkleden',
+      'Gespecialiseerde toepassingen zoals handtassen en schoenen',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Wassvastheid en kleurfading',
+      'Droogtijd en productiviteit',
+      'Kwaliteit-prijsverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw DTG-inkten gebruiken?',
+        answer: 'Onze DTG-inkten zijn compatibel met Epson, Mimaki, Ricoh, Roland DTG-printers en alle DTG-gemodificeerde printopstellingen.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y / W). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw DTG-inkten?',
+        answer: 'Onze DTG-inkten hebben een houdbaarheid van 12 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Kunnen we een sample aanvragen voordat we bestellen?',
+        answer: 'Ja, we bieden samples aan voor evaluatie. Neem contact met ons op voor meer informatie.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'sublimatie': {
+    heroProduct: 'Sublimatie Producten',
+    heroSubtitle:
+      'Hoogwaardige sublimatie-inkten, printers en papier voor textiel- en harde oppervlakte print.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2024/06/sublimation-ink.jpg',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2024/06/sublimation-ink.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/07/ink-sublimation-4.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/05/Sublimation-Printer-1.png'
+    ],
+    overview: [
+      'Breed assortiment aan sublimatieproducten voor verschillende toepassingen',
+      'Gecertificeerde kwaliteit met uitstekende kleurechtheid',
+      'Snelle verharding en hoge drukcapaciteit',
+      'Compatibel met alle bekende sublimatieprinters',
+      'Sublimatie-inkten, printers en papier beschikbaar',
+    ],
+    specTable: [
+      { label: 'Type', value: 'Waterbasis sublimatie-inkt' },
+      { label: 'Kleurset', value: 'CMYK' },
+      { label: 'Consistentie', value: 'Medium vloeistof' },
+      { label: 'Viscositeit', value: '10-14 cps @ 25°C' },
+      { label: 'pH-waarde', value: '7.0-8.0' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '12 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson I3200', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson I3200', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson I3200', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson I3200', nozzle: '99.5%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Magenta', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+      { color: 'Geel', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Zwart', wet: '5/5', dry: '5/5', light: '5/5', wash: '5/5' },
+    ],
+    applications: [
+      'Textiel en kleding (polyester, gemengd)',
+      'Mugs, phone cases en harde oppervlakken',
+      'Sportartikelen en merchandise',
+      'Interieurtextiel en vloerkleden',
+      'Gespecialiseerde toepassingen zoals schilderijen',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Wassvastheid en kleurfading',
+      'Droogtijd en productiviteit',
+      'Kwaliteit-prijsverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar producten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw sublimatieproducten gebruiken?',
+        answer: 'Onze sublimatieproducten zijn compatibel met Epson, Mimaki, Ricoh, Roland sublimatieprinters en alle sublimatie-gemodificeerde printopstellingen.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw sublimatieproducten?',
+        answer: 'Onze sublimatieproducten hebben een houdbaarheid van 12 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Kunnen we een sample aanvragen voordat we bestellen?',
+        answer: 'Ja, we bieden samples aan voor evaluatie. Neem contact met ons op voor meer informatie.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'eco-solvent-inkten': {
+    heroProduct: 'Eco-solvent Inkt',
+    heroSubtitle:
+      'Hoogwaardige eco-solvent inkten voor Roland, Epson en andere merken, perfect voor outdoor reclame en signage.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2025/03/Eco-solvent_Ink.webp',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2025/03/Eco-solvent_Ink.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2024/07/1000ml-eco-solvent-ink-3.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2025/03/Eco-solvent-ink-for-roland-printer.webp'
+    ],
+    overview: [
+      'Hogekwaliteit eco-solvent inkt voor professionele afdrukken',
+      'Consistente kleur voor hoge-volume productie',
+      'Lange levensduur van de printkop',
+      'Uitstekende weerstestandigheid voor outdoor gebruik',
+      'Compatibel met Roland, Epson en andere merken',
+    ],
+    specTable: [
+      { label: 'Type', value: 'Eco-solvent inkt' },
+      { label: 'Kleurset', value: 'BK,C,M,Y,LC,LM,LK,W,OR,GR' },
+      { label: 'Volume', value: '500ML Ink bag, 1000ML/Bottle' },
+      { label: 'Viscositeit', value: '12-16 cps @ 25°C' },
+      { label: 'pH-waarde', value: '7.5-8.5' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '18 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson I3200', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson I3200', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson I3200', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson I3200', nozzle: '99.5%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Magenta', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+      { color: 'Geel', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Zwart', wet: '5/5', dry: '5/5', light: '5/5', wash: '5/5' },
+    ],
+    applications: [
+      'Outdoor reclameborden',
+      'Autobody stickers',
+      'Lichthuisadvertenties',
+      'Banners en posters',
+      'Vloerstickers',
+      'Bannerlabels',
+      'Productverpakking',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Weerstestandigheid',
+      'Droogtijd en productiviteit',
+      'Kwaliteit-prijsverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw eco-solvent-inkten gebruiken?',
+        answer: 'Onze eco-solvent-inkten zijn compatibel met Roland SG-300 SG-540 SG2-300 SG2-540 SG2-640 SG3-300 SG3-540 VG-540 VG-640 VG2-540 VG2-640 VG3-540 VG3-540 Eco-solvent Printer, Epson I3200 4720 DX5 DX7 GS6000 SC-S30670 SC-S50670 SC-S30600 SC-S50600 SC-S30610 SC-S50610 SC-S30680 SC-S50680 Eco-solvent Printer en andere merken.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw eco-solvent-inkten?',
+        answer: 'Onze eco-solvent-inkten hebben een houdbaarheid van 18 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Kunnen we een sample aanvragen voordat we bestellen?',
+        answer: 'Ja, we bieden samples aan voor evaluatie. Neem contact met ons op voor meer informatie.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'uv-inkten': {
+    heroProduct: 'UV Inkt',
+    heroSubtitle:
+      'Hogekwaliteit UV ink voor Epson, Mimaki en Ricoh printers, speciaal ontworpen voor professionele afdrukken.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2025/04/UV-Ink-3.webp',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2025/04/UV-Ink-3.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2024/07/1000ml-uv-ink-for-ricoh.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2024/07/ricoh-ink-uv.webp'
+    ],
+    overview: [
+      '100% compatibel met Epson, Mimaki en Ricoh printers',
+      'Gegarandeerd geen verstoppen van printkop',
+      'Snel verharding onder UV-licht',
+      'Levendige kleuren en hoge contrast',
+      'Uitstekende krasbestendigheid',
+      'Goede aderstand en weerstestandigheid',
+    ],
+    specTable: [
+      { label: 'Type', value: 'UV curabele inkt' },
+      { label: 'Kleurset', value: 'BK C M Y LC LM WH FM FY' },
+      { label: 'Volume', value: '1000ML/Bottle' },
+      { label: 'Viscositeit', value: '10-14 cps @ 25°C' },
+      { label: 'pH-waarde', value: '7.0-8.0' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '18 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson I3200', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson I3200', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson I3200', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson I3200', nozzle: '99.5%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Magenta', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+      { color: 'Geel', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Zwart', wet: '5/5', dry: '5/5', light: '5/5', wash: '5/5' },
+    ],
+    applications: [
+      'Reclame en logo',
+      'Persoonlijke aanpassing',
+      'Verpakkingsprint',
+      'Thuisdecoratie',
+      'Verpakking en etikettering',
+      'Elektronische producten behuizing',
+      'Industriële producten',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Verhardingstijd',
+      'Krasbestendigheid',
+      'Kwaliteit-prijsverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw UV-inkten gebruiken?',
+        answer: 'Onze UV-inkten zijn compatibel met Epson, Mimaki en Ricoh printers, inclusief Epson DX4 DX5 DX6 DX7 DX10, Mimaki UJV-160 3042FX 3042HG 6042 en Ricoh GEN3 GEN4 GEN5 GEN6 printers.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw UV-inkten?',
+        answer: 'Onze UV-inkten hebben een houdbaarheid van 18 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Is uw UV-ink gegarandeerd dat het de printkop niet verstoopt?',
+        answer: 'Ja, onze UV-ink is 100% compatibel met de printers en gegarandeerd dat het de printkop niet verstoopt.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'pigment-inkten': {
+    heroProduct: 'Pigment Inkt',
+    heroSubtitle:
+      'Hogekwaliteit pigmentink voor Epson, Canon en HP printers, speciaal ontworpen voor professionele afdrukken met uitstekende kleurstabiliteit en waterweerstand.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2025/03/Pigment-Ink.webp',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2025/03/Pigment-Ink.webp',
+      'https://www.winnerjet.com/wp-content/uploads/2024/06/pigment-ink.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/08/ink-pigment-2.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/08/pigment-ink-for-epson.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/08/pigment-ink-1000ml-for-canon.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2025/03/Pigment-ink-for-hp.webp'
+    ],
+    overview: [
+      'Uitstekende kleurstabiliteit en waterweerstand',
+      '100% compatibel met Epson, Canon en HP printers',
+      'Lange levensduur van de printkop',
+      'Levendige kleuren met hoge contrast',
+      'Geschikt voor professionele afdrukken',
+      'Verschillende toepassingen mogelijk',
+    ],
+    specTable: [
+      { label: 'Type', value: 'Waterbasis pigmentink' },
+      { label: 'Kleurset', value: 'BK,C,M,Y,LC,LM,PK,LK,LLK,OR,GR' },
+      { label: 'Volume', value: '1000ML/Bottle' },
+      { label: 'Viscositeit', value: '12-16 cps @ 25°C' },
+      { label: 'pH-waarde', value: '7.5-8.5' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '18 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson I3200', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson I3200', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson I3200', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson I3200', nozzle: '99.5%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Magenta', wet: '4.7/5', dry: '5/5', light: '4.5/5', wash: '4.7/5' },
+      { color: 'Geel', wet: '4.8/5', dry: '5/5', light: '4.5/5', wash: '4.8/5' },
+      { color: 'Zwart', wet: '5/5', dry: '5/5', light: '5/5', wash: '5/5' },
+    ],
+    applications: [
+      'Papier & kantoorprint',
+      'Verpakking & etiketten',
+      'Kunst & creatieve afdrukken',
+      'Signage & posters (binnen gebruik)',
+      'Foto & kunstafdrukken',
+      'CAD & technische tekeningen',
+      'ID & ticketprint',
+    ],
+    choiceCriteria: [
+      'Kwaliteit van de pigmenten',
+      'Kleurconsistentie tussen batches',
+      'Compatibel met uw printer',
+      'Waterweerstand',
+      'Droogtijd en productiviteit',
+      'Kwaliteit-prijsverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw pigmentinkten gebruiken?',
+        answer: 'Onze pigmentinkten zijn compatibel met Epson, Canon en HP printers, inclusief Epson Stylus PRO, Canon iPF en PRO series, en HP DesignJet en OfficeJet printers.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw pigmentinkten?',
+        answer: 'Onze pigmentinkten hebben een houdbaarheid van 18 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Is uw pigmentink gegarandeerd dat het de printkop niet verstoopt?',
+        answer: 'Ja, onze pigmentink is 100% compatibel met de printers en gegarandeerd dat het de printkop niet verstoopt.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+  'dye-inkten': {
+    heroProduct: 'Dye Inkt',
+    heroSubtitle:
+      'Hogekwaliteit dyeink voor Epson, Canon en HP printers, speciaal ontworpen voor levendige kleuren en soepele print.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2024/08/1000ML-Ink-Dye-For-Epson.jpg',
+    galleryImages: [
+      'https://www.winnerjet.com/wp-content/uploads/2024/08/1000ML-Ink-Dye-For-Epson.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/08/Dye-Ink-For-Canon.jpg',
+      'https://www.winnerjet.com/wp-content/uploads/2024/08/Dye-Ink-1000ML-For-Epson.jpg'
+    ],
+    overview: [
+      'Hogekwaliteit dyeink met levendige kleuren',
+      'Soepele print zonder verstoppen van nozzels',
+      '100% compatibel met Epson, Canon en HP printers',
+      'Uitstekende prestaties in foto- en kantoorprint',
+      'Beschikbaar voor grote formaten printers',
+    ],
+    specTable: [
+      { label: 'Type', value: 'Waterbasis dyeink' },
+      { label: 'Kleurset', value: 'BK,C,M,Y,LC,LM' },
+      { label: 'Volume', value: '1000ML/Bottle' },
+      { label: 'Viscositeit', value: '2.5 ~ 4.0 mPa·s' },
+      { label: 'pH-waarde', value: '7.0 ~ 8.0' },
+      { label: 'Oppervlaktespanning', value: '32-38 mN/m' },
+      { label: 'Deeltjesgrootte', value: '≤ 0.2μm' },
+      { label: 'Opslagtemperatuur', value: '5-35°C' },
+      { label: 'Shelf life', value: '12 maanden bij goede opslag' },
+    ],
+    tests: [
+      { color: 'Cyaan', printhead: 'Epson I3200', nozzle: '99.0%', fluency: 'Uitstekend' },
+      { color: 'Magenta', printhead: 'Epson I3200', nozzle: '98.8%', fluency: 'Uitstekend' },
+      { color: 'Geel', printhead: 'Epson I3200', nozzle: '99.2%', fluency: 'Uitstekend' },
+      { color: 'Zwart', printhead: 'Epson I3200', nozzle: '99.5%', fluency: 'Uitstekend' },
+    ],
+    performance: [
+      { color: 'Cyaan', wet: '1.35/5', dry: '5/5', light: '4.5/5', wash: '4.0/5' },
+      { color: 'Magenta', wet: '1.40/5', dry: '5/5', light: '4.5/5', wash: '4.0/5' },
+      { color: 'Geel', wet: '1.25/5', dry: '5/5', light: '4.5/5', wash: '4.0/5' },
+      { color: 'Zwart', wet: '1.55/5', dry: '5/5', light: '5/5', wash: '4.5/5' },
+    ],
+    applications: [
+      'Foto print',
+      'Kantoor print',
+      'Brieven en documenten',
+      'Flyers en brochures',
+      'Presentaties en rapporten',
+      'Inkjet printers voor thuis en kantoor',
+    ],
+    choiceCriteria: [
+      'Kleurintensiteit',
+      'Printsoepelheid',
+      'Compatibel met uw printer',
+      'Houdbaarheid',
+      'Prijs-kwaliteitverhouding',
+      'Service en ondersteuning',
+    ],
+    storageTips: [
+      'Bewaar inkten bij kamertemperatuur (5-35°C)',
+      'Vermijd direct zonlicht en extreme temperaturen',
+      'Zet de deksel goed dicht na gebruik',
+      'Schud de fles voor gebruik als de inkt lang niet is gebruikt',
+      'Verwijder oude inkt uit de printer voordat u een nieuwe batch gebruikt',
+    ],
+    faqs: [
+      {
+        question: 'Welke printers kunnen uw dye-inkten gebruiken?',
+        answer: 'Onze dye-inkten zijn compatibel met Epson, Canon, HP en Brother printers, inclusief alle bekende modellen van deze merken.',
+      },
+      {
+        question: 'Wat is de minimumorderhoeveelheid?',
+        answer: 'De minimumorderhoeveelheid is een set (BK / C / M / Y). Na samplegoedkeuring is bulkbestelling mogelijk.',
+      },
+      {
+        question: 'Bieden jullie private label mogelijkheden?',
+        answer: 'Ja, we bieden volledige private label-dienstverlening, inclusief ontwerp, etikettering en verpakking.',
+      },
+      {
+        question: 'Hoe lang is de houdbaarheid van uw dye-inkten?',
+        answer: 'Onze dye-inkten hebben een houdbaarheid van 12 maanden bij goede opslag (bij kamertemperatuur, afgesloten fles).',
+      },
+      {
+        question: 'Is uw dye-ink veilig voor alle printers?',
+        answer: 'Ja, onze dye-ink is 100% compatibel met de printers en gegarandeerd dat het de printkop niet verstoopt.',
+      },
+    ],
+    heroNotes: [
+      '✓ ISO 9001 gecertificeerd',
+      '✓ CE goedgekeurd',
+      '✓ REACH compliant',
+      '✓ Nederlandse service en ondersteuning',
+    ],
+  },
+};
+
+const pageContent = detailContentByCategory[categorySlug] || {};
+
+const heroTitle = pageContent.heroProduct || category.title;
+const heroSubtitle = pageContent.heroSubtitle || '';
+const overviewBullets = pageContent.overview || [];
+const callouts = pageContent.callouts || [];
+const features = pageContent.features || [];
+const specTable = pageContent.specTable || [];
+const tests = pageContent.tests || [];
+const performance = pageContent.performance || [];
+const applications = pageContent.applications || [];
+const choiceCriteria = pageContent.choiceCriteria || [];
+const storageTips = pageContent.storageTips || [];
+const faqs = pageContent.faqs || [];
+const heroNotes = pageContent.heroNotes || [];
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{category.title} | NordicLine</title>
+    <meta name="description" content={category.description} />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+      
+      <main>
+        <!-- 产品详情头部 -->
+        <section class="product-header">
+          <div class="product-breadcrumb">
+            <a href="/">Home</a> → 
+            <a href="/products">Producten</a> → 
+            <a href={`/products/${category.slug}`}>{category.title}</a> → 
+            <span>{heroTitle}</span>
+          </div>
+        </section>
+        
+        <!-- 产品图片库 -->
+        {pageContent && (
+          <section class="product-gallery">
+            <h2>{heroTitle}</h2>
+            <div class="gallery-container">
+              <div class="main-image">
+                <img src={pageContent.image} alt={heroTitle} loading="lazy" />
+              </div>
+              <div class="thumbnail-grid">
+                {pageContent.galleryImages.map((galleryImage, index) => (
+                  <div key={index} class="thumbnail">
+                    <img src={galleryImage} alt={`${heroTitle} - afbeelding ${index + 1}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+        
+        <!-- 产品列表 -->
+        <section class="product-list">
+          <h2>{category.title} Producten</h2>
+          <div class="product-grid">
+            {productsByCategory.map((product) => (
+              <ProductCard key={product.slug} product={product} />
+            ))}
+          </div>
+        </section>
+        
+        <!-- 联系CTA -->
+        <section class="cta-section">
+          <h2>Heb je vragen over dit product?</h2>
+          <p>Ons team staat klaar om je te helpen met technische vragen, offertes of samples.</p>
+          <button class="btn primary large" onclick="openInquiryForm()">Neem contact op</button>
+        </section>
+      </main>
+      
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+  </body>
+</html>

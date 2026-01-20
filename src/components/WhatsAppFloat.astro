@@ -1,0 +1,75 @@
+---
+const phoneNumber = "8318477468950";
+const whatsappUrl = `https://wa.me/${phoneNumber}`;
+---
+
+<div class="whatsapp-float">
+  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat met ons op WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="whatsapp-icon">
+      <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+    </svg>
+    <span class="whatsapp-text">Chat op WhatsApp</span>
+  </a>
+</div>
+
+<style>
+  .whatsapp-float {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+
+  .whatsapp-float a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #25D366;
+    color: white;
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .whatsapp-float a:hover {
+    background-color: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .whatsapp-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .whatsapp-text {
+    display: inline-block;
+  }
+
+  /* Mobile adaptation */
+  @media (max-width: 768px) {
+    .whatsapp-float {
+      right: 15px;
+      bottom: 15px;
+    }
+
+    .whatsapp-float a {
+      padding: 10px 14px;
+    }
+
+    .whatsapp-text {
+      display: none;
+    }
+
+    .whatsapp-icon {
+      width: 28px;
+      height: 28px;
+    }
+  }
+</style>

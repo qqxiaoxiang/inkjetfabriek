@@ -1,0 +1,215 @@
+---
+import Header from '../../../components/Header.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { categories, products } from '../../../data/products';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return products.map((product) => ({
+    params: { categorySlug: product.category, productSlug: product.slug },
+  }));
+}
+
+const categorySlug = Astro.params.categorySlug;
+const productSlug = Astro.params.productSlug;
+const category = categories.find((item) => item.slug === categorySlug);
+const product = products.find((item) => item.slug === productSlug);
+if (!category || !product) {
+  throw new Error('Product niet gevonden');
+}
+
+// 查找相关产品（同分类的其他产品）
+const relatedProducts = products.filter(p => p.category === category.slug && p.slug !== product.slug);
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{product.title} | NordicLine</title>
+    <meta name="description" content={product.summary} />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+      
+      <main>
+        <!-- 产品详情头部 -->
+        <section class="product-header">
+          <div class="product-breadcrumb">
+            <a href="/">Home</a> → 
+            <a href="/products">Producten</a> → 
+            <a href={`/products/${category.slug}`}>{category.title}</a> → 
+            <span>{product.title}</span>
+          </div>
+        </section>
+        
+        <!-- 产品英雄区域 -->
+        <section class="hero">
+          <div class="hero-image">
+            {product.galleryImages && product.galleryImages.length > 0 ? (
+              <div class="product-gallery">
+                <div class="main-image">
+                  <img src={product.image} alt={product.title} loading="lazy" />
+                </div>
+                <div class="thumbnail-grid">
+                  <img 
+                    src={product.image} 
+                    alt={`${product.title} - hoofdfoto`} 
+                    loading="lazy" 
+                    class="thumbnail active"
+                  />
+                  {product.galleryImages.map((galleryImage, index) => (
+                    <img 
+                      key={index} 
+                      src={galleryImage} 
+                      alt={`${product.title} - afbeelding ${index + 1}`} 
+                      loading="lazy" 
+                      class="thumbnail"
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <img src={product.image} alt={product.title} loading="lazy" />
+            )}
+          </div>
+          <div class="hero-content">
+            <p class="eyebrow">{category.title}</p>
+            <h1>{product.title}</h1>
+            <p class="hero-description">{product.details}</p>
+            
+            <div class="hero-actions">
+              <button class="btn primary" onclick="openInquiryForm()">Vraag een sample</button>
+              <a class="btn ghost" href={`/products/${category.slug}`}>Bekijk collectie</a>
+            </div>
+            
+            <div class="hero-highlights">
+              <div class="highlight-item">
+                <span class="highlight-icon">📦</span>
+                <span class="highlight-text">Snel leverbaar</span>
+              </div>
+              <div class="highlight-item">
+                <span class="highlight-icon">✅</span>
+                <span class="highlight-text">Certificeerd product</span>
+              </div>
+              <div class="highlight-item">
+                <span class="highlight-icon">🌍</span>
+                <span class="highlight-text">Binnen Europa levering</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 产品信息区域 -->
+        <section class="product-info">
+          <!-- 产品摘要 -->
+          <div class="info-card">
+            <h2>Product samenvatting</h2>
+            <p>{product.summary}</p>
+          </div>
+          
+          <!-- 产品特性 -->
+          {product.features && product.features.length > 0 && (
+            <div class="info-card">
+              <h2>Product kenmerken</h2>
+              <ul class="specs-list">
+                {product.features.map((feature, index) => (
+                  <li key={index} class="spec-item">
+                    <span class="spec-icon">✅</span>
+                    <span class="spec-text">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
+          <!-- 技术规格 -->
+          <div class="info-card">
+            <h2>Technische specificaties</h2>
+            <ul class="specs-list">
+              {product.specs.map((spec, index) => (
+                <li key={index} class="spec-item">
+                  <span class="spec-icon">🔧</span>
+                  <span class="spec-text">{spec}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+        
+        <!-- 产品详情 -->
+        <section class="product-details">
+          <div class="details-card">
+            <h2>Product details</h2>
+            <div class="details-content">
+              <p>{product.details}</p>
+              <p>
+                Onze {product.title} is ontworpen voor hoge prestaties en betrouwbaarheid.
+                Elk product wordt getest volgens strenge kwaliteitsnormen voordat het naar onze klanten wordt gestuurd.
+              </p>
+            </div>
+          </div>
+        </section>
+        
+        <!-- 相关产品 -->
+        {relatedProducts.length > 0 && (
+          <section class="related-products">
+            <h2>Gerelateerde producten</h2>
+            <div class="related-grid">
+              {relatedProducts.map((relatedProduct) => (
+                <ProductCard key={relatedProduct.slug} product={relatedProduct} />
+              ))}
+            </div>
+          </section>
+        )}
+        
+        <!-- 联系CTA -->
+        <section class="cta-section">
+          <div class="cta-content">
+            <h2>Heb je vragen over dit product?</h2>
+            <p>Ons team staat klaar om je te helpen met technische vragen, offertes of samples.</p>
+            <button class="btn primary large" onclick="openInquiryForm()">Neem contact op</button>
+          </div>
+        </section>
+      </main>
+      
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+
+    <!-- 产品图片库JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const gallery = document.querySelector('.product-gallery');
+        if (!gallery) return;
+        
+        const mainImage = gallery.querySelector('.main-image img');
+        const thumbnails = gallery.querySelectorAll('.thumbnail');
+        
+        thumbnails.forEach(thumbnail => {
+          thumbnail.addEventListener('click', () => {
+            // 移除所有缩略图的active类
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            // 添加active类到当前点击的缩略图
+            thumbnail.classList.add('active');
+            // 更新主图
+            mainImage.src = thumbnail.src;
+            mainImage.alt = thumbnail.alt;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

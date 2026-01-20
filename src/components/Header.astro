@@ -1,0 +1,312 @@
+---
+import { categories } from '../data/products';
+import WhatsAppFloat from './WhatsAppFloat.astro';
+import InquiryForm from './InquiryForm.astro';
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Over ons', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const productDropdown = [
+  { label: 'Alle Producten', href: '/products' },
+  ...categories.map((category) => ({
+    label: category.title,
+    href: `/products/${category.slug}`,
+  })),
+];
+--- 
+
+<header class="site-header" id="top">
+  <div class="brand">
+    <a class="logo-link" href="/" aria-label="NordicLine home">
+      <img src="/img/logo.png" alt="NordicLine logo" width="160" height="68" loading="lazy" />
+      <div class="brand-text">
+        <span>NordicLine</span>
+        <small>Ink &amp; Print</small>
+      </div>
+    </a>
+    <p class="tagline">Hoge kwaliteit, snelle levering en Nederlandse service.</p>
+  </div>
+
+  <nav class="main-nav" aria-label="Hoofdmenu">
+    <ul id="primary-navigation">
+      {navLinks.map((link) => (
+        <li>
+          <a href={link.href}>{link.label}</a>
+        </li>
+      ))}
+      <li class="dropdown">
+        <details>
+          <summary>Producten</summary>
+          <div class="dropdown-panel">
+            {productDropdown.map((item) => (
+              <a href={item.href} target="_self" rel="noreferrer">
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </details>
+      </li>
+    </ul>
+  </nav>
+
+  <button
+    class="menu-toggle"
+    id="nav-toggle"
+    aria-expanded="false"
+    aria-controls="primary-navigation"
+    aria-label="Open navigatie"
+  >
+    <span class="menu-icon"></span>
+    <span class="sr-only">Menu</span>
+  </button>
+</header>
+
+<WhatsAppFloat />
+<InquiryForm />
+
+<style>
+  :root {
+    --header-bg: #ffffff;
+    --header-text: #0f1f3d;
+    --accent: #ff6f20;
+    --brand-color: #0057b7;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 5vw;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(15, 31, 61, 0.08);
+    box-shadow: 0 10px 40px rgba(15, 31, 61, 0.08);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+  }
+
+  .logo-link img {
+    display: block;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .brand-text span {
+    font-weight: 600;
+    color: var(--header-text);
+  }
+
+  .brand-text small {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--brand-color);
+  }
+
+  .tagline {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(15, 31, 61, 0.65);
+  }
+
+  .main-nav {
+    display: flex;
+    justify-content: center;
+  }
+
+  #primary-navigation {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+  }
+
+  #primary-navigation li {
+    position: relative;
+  }
+
+  #primary-navigation a,
+  #primary-navigation summary {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--header-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.2rem 0;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+
+  #primary-navigation a:hover,
+  #primary-navigation summary:hover {
+    color: var(--accent);
+  }
+
+  .dropdown summary::marker {
+    display: none;
+  }
+
+  .dropdown-panel {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    min-width: 200px;
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 31, 61, 0.15);
+    padding: 0.85rem 1rem;
+    box-shadow: 0 20px 50px rgba(15, 31, 61, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    z-index: 70;
+  }
+
+  .dropdown-panel a {
+    font-size: 0.9rem;
+    text-transform: none;
+    color: var(--header-text);
+  }
+
+  .dropdown-panel a:hover {
+    color: var(--accent);
+  }
+
+  details:not([open]) .dropdown-panel {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: none;
+    border: 1px solid rgba(15, 31, 61, 0.2);
+    padding: 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  .menu-icon {
+    width: 22px;
+    height: 2px;
+    background: var(--header-text);
+    position: relative;
+    display: block;
+  }
+
+  .menu-icon::before,
+  .menu-icon::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    left: 0;
+  }
+
+  .menu-icon::before {
+    top: -6px;
+  }
+
+  .menu-icon::after {
+    top: 6px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  @media (max-width: 960px) {
+    .site-header {
+      grid-template-columns: 1fr auto;
+    }
+
+    .tagline {
+      display: none;
+    }
+
+    .main-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      background: #ffffff;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.35s ease-in-out;
+      box-shadow: 0 20px 45px rgba(15, 31, 61, 0.15);
+    }
+
+    .main-nav.open {
+      transform: scaleY(1);
+    }
+
+    #primary-navigation {
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 1.2rem 1.5rem 1.5rem;
+    }
+
+    .dropdown-panel {
+      position: static;
+      box-shadow: none;
+      border: none;
+      padding-left: 1rem;
+    }
+
+    .menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script type="module" client:load>
+  const navToggle = document.getElementById('nav-toggle');
+  const mainNav = document.querySelector('.main-nav');
+
+  navToggle?.addEventListener('click', () => {
+    const openNav = mainNav?.classList.toggle('open');
+    if (navToggle) {
+      navToggle.setAttribute('aria-expanded', String(openNav === true));
+    }
+  });
+</script>

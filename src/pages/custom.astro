@@ -1,0 +1,168 @@
+---
+import Header from '../components/Header.astro';
+
+const capabilities = [
+  {
+    title: 'OEM & ODM',
+    detail:
+      'Onze fabriek fungeert als verlengde productielijn voor merken en distributeurs. Tooling, R&amp;D en QA worden in Nederland bewaakt zodat jouw merk private-label batches krijgt.',
+  },
+  {
+    title: 'Custom-mengsels',
+    detail:
+      'Het lab ontwikkelt kleuren, viscositeiten en droogprofielen per printerfamilie, filmtype en textiel, met uitgebreide testrapporten.',
+  },
+  {
+    title: 'Consumables & software',
+    detail:
+      'Cartridges, reservoirs, printprogramma’s en handleidingen worden getest op compatibiliteit met je printers en applicaties.',
+  },
+];
+
+const steps = [
+  { title: '1. Intake', detail: 'Technische briefing, gewenste volumes en kwaliteitscases bepalen we in overleg.' },
+  { title: '2. Prototyping', detail: 'We bouwen kleurformules, testen ze op DTF/DTG/UV/sublimatie en leveren testprints.' },
+  { title: '3. Serie & support', detail: 'Na akkoord schalen we op, verzorgen juridische documenten en zetten we logistiek uit.' },
+];
+
+const faq = [
+  {
+    question: 'Kunnen jullie cartridges op maat maken?',
+    answer:
+      'Ja. We ontwerpen en produceren cartridges, reservoirs en tanks compleet met branding en aangepaste chips.',
+  },
+  {
+    question: 'Bieden jullie certificaten aan?',
+    answer:
+      'Elke batch krijgt ISO/REACH/ROHS-documenten, batchcodes en testrapporten zodat je compliance kunt aantonen.',
+  },
+  {
+    question: 'Leveren jullie binnen Europa?',
+    answer:
+      'Ja, we sturen vanuit onze Nederlandse partner hubs inclusief logistiek advies, labels en douanepapieren.',
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Op maat gemaakte inkten &amp; printoplossingen | NordicLine</title>
+    <meta
+      name="description"
+      content="NordicLine biedt OEM/ODM inkten, cartridges en printsoftware op maat, ondersteund door Nederlands labkader."
+    />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+
+      <main>
+        <section id="custom-ink" class="hero">
+          <div>
+            <p class="eyebrow">Factory-grade custom ink</p>
+            <h1>Geef je merk kleur met OEM/ODM inkten uit onze fabriek</h1>
+            <p>
+              NordicLine combineert Nederlandse productiecultuur met de schaal van Winnerjet. Wij ontwerpen inkten,
+              cartridges, printers en consumables die je printers &amp; klanten onmiddellijk laten presteren.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="/contact">Plan een intake</a>
+              <a class="btn ghost" href="#capabilities">Bekijk capaciteiten</a>
+            </div>
+          </div>
+          <div class="hero-card">
+            <p class="card-label">Onze fabriek</p>
+            <h2>R&amp;D, kwaliteitscontrole en private label</h2>
+            <p>
+              Gevalideerde labs in Nederland leveren prototypes, logistiek en certificeringen zodat jouw merk veilig
+              kan opschalen.
+            </p>
+            <p class="card-meta">OEM · ODM · Printprogramma’s</p>
+          </div>
+        </section>
+
+        <section id="capabilities" class="capabilities">
+          <header>
+            <p class="eyebrow">Capaciteiten</p>
+            <h2>Totale controle over inkt, printers en consumables</h2>
+          </header>
+          <div class="cap-grid">
+            {capabilities.map((cap) => (
+              <article>
+                <h3>{cap.title}</h3>
+                <p>{cap.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="process">
+          <header>
+            <p class="eyebrow">Proces</p>
+            <h2>Van technische briefing tot volcontinu productie</h2>
+          </header>
+          <div class="steps">
+            {steps.map((step) => (
+              <article>
+                <p class="step-title">{step.title}</p>
+                <p>{step.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="custom-solutions" class="solutions">
+          <header>
+            <p class="eyebrow">Wat je ontvangt</p>
+            <h2>Inkt, cartridges en printprogrammering afgestemd op jouw machines</h2>
+          </header>
+          <ul>
+            <li>Software en printersetups met OTT-profielen en drooginstellingen.</li>
+            <li>Consumables (films, tanks) getest op duurzaamheid en compatibiliteit.</li>
+            <li>Handleidingen, trainingsvideo’s en service-oplossingen voor jouw team.</li>
+          </ul>
+        </section>
+
+        <section id="private-label" class="faq">
+          <header>
+            <p class="eyebrow">Veelgestelde vragen</p>
+            <h2>Praktische antwoorden op inktaanvragen</h2>
+          </header>
+          <div class="faq-list">
+            {faq.map((item) => (
+              <details>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section class="cta">
+          <div>
+            <p class="eyebrow">Klaar om te customizen?</p>
+            <h2>Vertel ons jouw printerfamilie, volumes en kwaliteitseisen.</h2>
+          </div>
+          <a class="btn primary" href="/contact">Neem contact op met Bob</a>
+        </section>
+      </main>
+
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+
+
+  </body>
+</html>

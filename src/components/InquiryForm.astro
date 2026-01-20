@@ -1,0 +1,392 @@
+<div class="inquiry-form-overlay" id="inquiryForm">
+  <div class="inquiry-form-container">
+    <div class="inquiry-form-header">
+      <h2>Offerteaanvraag</h2>
+      <button class="inquiry-form-close" onclick="closeInquiryForm()">&times;</button>
+    </div>
+    <form id="inquiryFormElement" class="inquiry-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Naam *</label>
+          <input type="text" id="name" name="name" required placeholder="Uw naam">
+        </div>
+        <div class="form-group">
+          <label for="country">Land *</label>
+          <input type="text" id="country" name="country" required placeholder="Uw land">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Telefoon / WhatsApp *</label>
+          <input type="tel" id="phone" name="phone" required placeholder="Uw telefoonnummer">
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail *</label>
+          <input type="email" id="email" name="email" required placeholder="Uw e-mailadres">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="message">Bericht *</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Uw bericht"></textarea>
+        </div>
+      </div>
+      <input type="hidden" id="pageUrl" name="pageUrl" value="">
+      <div class="form-actions">
+        <button type="submit" class="btn primary large">Verzend Offerteaanvraag</button>
+        <button type="button" class="btn secondary large" onclick="closeInquiryForm()">Annuleren</button>
+      </div>
+    </form>
+    <div class="form-status" id="formStatus"></div>
+  </div>
+</div>
+
+<script is:inline>
+  // 打开询盘表单
+  function openInquiryForm() {
+    const formOverlay = document.getElementById('inquiryForm');
+    if (formOverlay) {
+      formOverlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  // 关闭询盘表单
+  function closeInquiryForm() {
+    const formOverlay = document.getElementById('inquiryForm');
+    const formElement = document.getElementById('inquiryFormElement');
+    const formStatus = document.getElementById('formStatus');
+    
+    if (formOverlay) {
+      formOverlay.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // 重置表单
+    if (formElement) {
+      formElement.reset();
+    }
+    if (formStatus) {
+      formStatus.innerHTML = '';
+    }
+  }
+
+  // 将函数绑定到window对象
+  window.openInquiryForm = openInquiryForm;
+  window.closeInquiryForm = closeInquiryForm;
+
+  // 页面加载完成后执行
+  document.addEventListener('DOMContentLoaded', () => {
+    // 设置页面URL
+    const pageUrlInput = document.getElementById('pageUrl');
+    if (pageUrlInput) {
+      pageUrlInput.value = window.location.href;
+    }
+
+    // 表单提交处理
+    const inquiryForm = document.getElementById('inquiryFormElement');
+    if (inquiryForm) {
+      inquiryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const form = e.target;
+        const status = document.getElementById('formStatus');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        // 显示加载状态
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Verzenden...';
+        }
+        if (status) {
+          status.innerHTML = '<p class="loading">Bezig met verzenden...</p>';
+        }
+        
+        try {
+          // 获取表单数据
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData);
+          
+          // 提交到Cloudflare Workers接口
+          const response = await fetch('https://form1.ailujiaxiang.workers.dev/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok && status) {
+            status.innerHTML = '<p class="success">Bedankt! Uw aanvraag is succesvol verzonden. We nemen spoedig contact met u op.</p>';
+            // 清空表单
+            form.reset();
+            // 3秒后自动关闭
+            setTimeout(() => {
+              window.closeInquiryForm();
+            }, 3000);
+          } else if (status) {
+            throw new Error(result.error || 'Er is een fout opgetreden bij het verzenden.');
+          }
+        } catch (error) {
+          if (status) {
+            status.innerHTML = `<p class="error">Fout: ${error.message} Probeer het opnieuw.</p>`;
+          }
+        } finally {
+          // 恢复按钮状态
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Verzend Offerteaanvraag';
+          }
+        }
+      });
+    }
+    
+    // 点击遮罩层关闭表单
+    const formOverlay = document.getElementById('inquiryForm');
+    if (formOverlay) {
+      formOverlay.addEventListener('click', (e) => {
+        if (e.target.id === 'inquiryForm') {
+          window.closeInquiryForm();
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  /* CSS styles here */
+</style>
+
+<style>
+  .inquiry-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  
+  .inquiry-form-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .inquiry-form-header {
+    background-color: #2563eb;
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .inquiry-form-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .inquiry-form-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+  
+  .inquiry-form-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .inquiry-form {
+    padding: 30px;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .form-group {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .form-group.full-width {
+    flex: 1 0 100%;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #374151;
+    font-size: 14px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn.primary {
+    background-color: #2563eb;
+    color: white;
+  }
+  
+  .btn.primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+  
+  .btn.primary:disabled {
+    background-color: #93c5fd;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .btn.secondary {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  
+  .btn.secondary:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .btn.large {
+    padding: 14px 32px;
+    font-size: 18px;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .form-status {
+    padding: 0 30px 30px;
+  }
+  
+  .form-status p {
+    margin: 0;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+  
+  .form-status .loading {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .form-status .success {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .form-status .error {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  
+  @media (max-width: 640px) {
+    .inquiry-form {
+      padding: 20px;
+    }
+    
+    .form-row {
+      gap: 15px;
+    }
+    
+    .form-group {
+      min-width: 100%;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .btn.large {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // 添加全局函数，方便其他组件调用
+  window.openInquiryForm = openInquiryForm;
+  window.closeInquiryForm = closeInquiryForm;
+</script>

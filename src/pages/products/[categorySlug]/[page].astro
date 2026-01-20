@@ -1,0 +1,105 @@
+---
+import Header from '../../../components/Header.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { categories, products } from '../../../data/products';
+
+export const prerender = true;
+
+// 生成所有可能的页面路径
+export async function getStaticPaths() {
+  // 每页显示的产品数量
+  const PRODUCTS_PER_PAGE = 4;
+  const paths = [];
+  
+  for (const category of categories) {
+    const categoryProducts = products.filter(p => p.category === category.slug);
+    const totalPages = Math.ceil(categoryProducts.length / PRODUCTS_PER_PAGE);
+    for (let page = 1; page <= totalPages; page++) {
+      paths.push({
+        params: { categorySlug: category.slug, page: page.toString() },
+      });
+    }
+  }
+  
+  return paths;
+}
+
+// 获取当前页面的参数
+const categorySlug = Astro.params.categorySlug;
+const page = parseInt(Astro.params.page || '1');
+
+// 查找当前分类
+const category = categories.find(c => c.slug === categorySlug);
+if (!category) {
+  throw new Error(`Unknown category: ${categorySlug}`);
+}
+
+// 过滤当前分类的产品
+const categoryProducts = products.filter(p => p.category === categorySlug);
+
+// 每页显示的产品数量
+const PRODUCTS_PER_PAGE = 4;
+
+// 计算总页数和当前页的产品
+const totalPages = Math.ceil(categoryProducts.length / PRODUCTS_PER_PAGE);
+const startIndex = (page - 1) * PRODUCTS_PER_PAGE;
+const endIndex = startIndex + PRODUCTS_PER_PAGE;
+const currentProducts = categoryProducts.slice(startIndex, endIndex);
+
+// 生成基础路径
+const basePath = `/products/${categorySlug}`;
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{category.title} - Pagina {page} | NordicLine</title>
+    <meta name="description" content={category.description} />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+      
+      <main>
+        <section class="category-header">
+          <div>
+            <p class="eyebrow">Producten</p>
+            <h1>{category.title}</h1>
+            <p>{category.description}</p>
+          </div>
+        </section>
+        
+        <section class="product-list">
+          <div class="product-grid">
+            {currentProducts.map(product => (
+              <ProductCard product={product} />
+            ))}
+          </div>
+          
+          <Pagination 
+            currentPage={page} 
+            totalPages={totalPages} 
+            basePath={basePath} 
+          />
+        </section>
+      </main>
+      
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+    
+
+  </body>
+</html>

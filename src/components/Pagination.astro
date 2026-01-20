@@ -1,0 +1,39 @@
+---
+const { currentPage, totalPages, basePath } = Astro.props;
+---
+
+<nav class="pagination" role="navigation" aria-label="Productpagina's">
+  {currentPage > 1 && (
+    <a class="page-link" href={`${basePath}/${currentPage - 1}`}>
+      ← Vorige
+    </a>
+  )}
+  <span class="page-info">
+    Pagina {currentPage} van {totalPages}
+  </span>
+  {currentPage < totalPages && (
+    <a class="page-link" href={`${basePath}/${currentPage + 1}`}>
+      Volgende →
+    </a>
+  )}
+</nav>
+
+<style>
+  :global(.pagination) {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+  }
+
+  :global(.page-link) {
+    text-decoration: none;
+    color: var(--accent);
+  }
+
+  :global(.page-info) {
+    color: rgba(15, 31, 61, 0.7);
+  }
+</style>

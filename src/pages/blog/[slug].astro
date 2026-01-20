@@ -1,0 +1,959 @@
+---
+import Header from '../../components/Header.astro';
+import { blogs, getRecentBlogs } from '../../data/blog';
+
+export const prerender = true;
+
+// Generate static paths for each blog post
+export async function getStaticPaths() {
+  return blogs.map((blog) => ({
+    params: { slug: blog.slug },
+  }));
+}
+
+// Get current blog by slug
+const slug = Astro.params.slug;
+const blog = blogs.find(blog => blog.slug === slug);
+const recentBlogs = getRecentBlogs(3);
+
+if (!blog) {
+  // Handle 404 case here (Astro will automatically handle 404 for invalid slugs)
+  throw new Error(`Blog not found: ${slug}`);
+}
+
+// Get next and previous blogs for navigation
+const blogIndex = blogs.findIndex(b => b.slug === slug);
+const prevBlog = blogIndex > 0 ? blogs[blogIndex - 1] : null;
+const nextBlog = blogIndex < blogs.length - 1 ? blogs[blogIndex + 1] : null;
+
+// Format date for display
+const formattedDate = new Date(blog.date).toLocaleDateString('nl-NL', { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+});
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{blog.title} | NordicLine Blog</title>
+    <meta name="description" content={blog.excerpt} />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+
+      <main>
+        <!-- Blog Post Header -->
+        <section class="blog-post-header">
+          <div class="container">
+            <div class="post-meta">
+              <span class="post-category">{blog.category}</span>
+              <span class="post-date">{formattedDate}</span>
+              <span class="post-author">Door {blog.author}</span>
+            </div>
+            <h1>{blog.title}</h1>
+            <div class="post-tags">
+              {blog.tags.map((tag) => (
+                <span class="post-tag" key={tag}>{tag}</span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <!-- Blog Post Hero Image -->
+        <section class="blog-post-image">
+          <div class="container">
+            <img src={blog.image} alt={blog.imageAlt} loading="eager" />
+          </div>
+        </section>
+
+        <!-- Blog Post Content -->
+        <section class="blog-post-content">
+          <div class="container">
+            <div class="content-wrapper">
+              <!-- Main Content -->
+              <article class="main-content">
+                <!-- Content is rendered as HTML -->
+                <div class="post-body" set:html={blog.content}></div>
+              </article>
+
+              <!-- Sidebar -->
+              <aside class="sidebar">
+                <!-- Author Info -->
+                <div class="author-card">
+                  <h3>Over de Auteur</h3>
+                  <div class="author-info">
+                    <div class="author-avatar">
+                      <img src="https://via.placeholder.com/80" alt={blog.author} />
+                    </div>
+                    <div class="author-details">
+                      <h4>{blog.author}</h4>
+                      <p>Print- en inktexpert bij NordicLine met jarenlange ervaring in de printindustrie. Specialiseerd in textielafdruktechnologie en inktformuleringen.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recent Posts -->
+                <div class="recent-posts">
+                  <h3>Recent Gepubliceerd</h3>
+                  <ul>
+                    {recentBlogs.map((recentBlog) => (
+                      <li key={recentBlog.slug}>
+                        <a href={`/blog/${recentBlog.slug}`}>
+                          <div class="recent-post-image">
+                            <img src={recentBlog.image} alt={recentBlog.title} loading="lazy" />
+                          </div>
+                          <div class="recent-post-content">
+                            <span class="recent-post-date">{new Date(recentBlog.date).toLocaleDateString('nl-NL', { month: 'short', day: 'numeric' })}</span>
+                            <h4>{recentBlog.title}</h4>
+                          </div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <!-- Categories -->
+                <div class="categories">
+                  <h3>Categorieën</h3>
+                  <ul>
+                    <li><a href="/blog?category=Printtechnologie">Printtechnologie</a></li>
+                    <li><a href="/blog?category=Inktgids">Inktgids</a></li>
+                    <li><a href="/blog?category=Textielafdruk">Textielafdruk</a></li>
+                    <li><a href="/blog?category=Inktproducten">Inktproducten</a></li>
+                    <li><a href="/blog?category=Printtips">Printtips</a></li>
+                  </ul>
+                </div>
+
+                <!-- Tags Cloud -->
+                <div class="tags-cloud">
+                  <h3>Populaire Tags</h3>
+                  <div class="tags">
+                    {Array.from(new Set(blogs.flatMap(b => b.tags))).map((tag) => (
+                      <a href={`/blog?tag=${tag}`} class="tag" key={tag}>{tag}</a>
+                    ))}
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <!-- Related Posts -->
+        <section class="related-posts">
+          <div class="container">
+            <h2>Gerelateerde Blogs</h2>
+            <div class="related-posts-grid">
+              {recentBlogs.filter(relatedBlog => relatedBlog.slug !== blog.slug).map((relatedBlog) => (
+                <article class="related-post-card" key={relatedBlog.slug}>
+                  <div class="related-post-image">
+                    <img src={relatedBlog.image} alt={relatedBlog.title} loading="lazy" />
+                  </div>
+                  <div class="related-post-content">
+                    <h3>
+                      <a href={`/blog/${relatedBlog.slug}`}>{relatedBlog.title}</a>
+                    </h3>
+                    <p>{relatedBlog.excerpt}</p>
+                    <a href={`/blog/${relatedBlog.slug}`} class="btn primary small">Lees Meer</a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <!-- Post Navigation -->
+        <section class="post-navigation">
+          <div class="container">
+            <div class="navigation-links">
+              {prevBlog && (
+                <a href={`/blog/${prevBlog.slug}`} class="prev-post">
+                  <span class="nav-label">Vorige Blog</span>
+                  <span class="nav-title">{prevBlog.title}</span>
+                </a>
+              )}
+              {nextBlog && (
+                <a href={`/blog/${nextBlog.slug}`} class="next-post">
+                  <span class="nav-label">Volgende Blog</span>
+                  <span class="nav-title">{nextBlog.title}</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+          <div class="container">
+            <div class="newsletter-content">
+              <h2>Blijf op de hoogte van onze nieuwste blogs</h2>
+              <p>Abonneer u op onze nieuwsbrief en ontvang de laatste updates direct in uw mailbox.</p>
+              <form class="newsletter-form">
+                <input type="email" placeholder="Uw e-mailadres" required />
+                <button type="submit" class="btn primary">Abonneren</button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-brand">
+              <div class="brand-logo">
+                <img src="/img/logo.png" alt="NordicLine logo" width="160" height="68" loading="lazy" />
+                <div class="brand-text">
+                  <span>NordicLine</span>
+                  <small>Ink &amp; Print</small>
+                </div>
+              </div>
+              <p class="brand-description">Hoogwaardige inktfabrikant voor professionele afdrukken met ISO 9001 certificering.</p>
+            </div>
+            <div class="footer-links">
+              <h4>Snelkoppelingen</h4>
+              <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/products">Producten</a></li>
+                <li><a href="/about">Over Ons</a></li>
+                <li><a href="/contact">Contact</a></li>
+              </ul>
+            </div>
+            <div class="footer-contact">
+              <h4>Neem Contact Op</h4>
+              <ul>
+                <li><a href="mailto:ailujiaxiang@gmail">ailujiaxiang@gmail</a></li>
+                <li><a href="https://wa.me/8618477468950" target="_blank" rel="noopener noreferrer">WhatsApp: +86 184 7746 8950</a></li>
+                <li>Contactpersoon: Bob</li>
+                <li>Industrieweg 10, 1000 AA Amsterdam</li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div class="footer-bottom-content">
+              <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+              <div class="footer-bottom-links">
+                <a href="#">Privacybeleid</a>
+                <a href="#">Algemene Voorwaarden</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <style>
+      :root {
+        --section-padding: 4rem 0;
+        --card-bg: #ffffff;
+        --text-primary: #0f1f3d;
+        --text-secondary: #5a6782;
+        --accent: #ff6f20;
+        --border-radius-lg: 18px;
+        --shadow-lg: 0 15px 35px rgba(15, 31, 61, 0.1);
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      /* Blog Post Header */
+      .blog-post-header {
+        padding: 3rem 0 1rem;
+        background: var(--card-bg);
+      }
+
+      .post-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+        color: var(--text-secondary);
+        flex-wrap: wrap;
+      }
+
+      .post-category {
+        background: var(--accent);
+        color: white;
+        padding: 0.35rem 1rem;
+        border-radius: 999px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .blog-post-header h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+        color: var(--text-primary);
+      }
+
+      .post-tags {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .post-tag {
+        background: #f3f4f6;
+        color: var(--text-primary);
+        padding: 0.35rem 1rem;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      /* Blog Post Image */
+      .blog-post-image {
+        padding: 2rem 0;
+        background: var(--card-bg);
+        max-height: 600px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .blog-post-image img {
+        width: 100%;
+        max-height: 600px;
+        object-fit: cover;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+      }
+
+      /* Blog Post Content */
+      .blog-post-content {
+        padding: var(--section-padding);
+        background: #f8fafc;
+      }
+
+      .content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 3rem;
+      }
+
+      /* Main Content */
+      .main-content {
+        background: white;
+        padding: 3rem;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .post-body {
+        line-height: 1.8;
+        color: var(--text-primary);
+      }
+
+      .post-body h2 {
+        font-size: 2rem;
+        margin: 2rem 0 1.5rem;
+        color: var(--text-primary);
+      }
+
+      .post-body h3 {
+        font-size: 1.5rem;
+        margin: 1.5rem 0 1rem;
+        color: var(--text-primary);
+      }
+
+      .post-body p {
+        margin: 1rem 0;
+      }
+
+      .post-body ul,
+      .post-body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+      }
+
+      .post-body li {
+        margin: 0.5rem 0;
+      }
+
+      .post-body a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .post-body a:hover {
+        color: #e65c00;
+        text-decoration: underline;
+      }
+
+      .post-body img {
+        max-width: 100%;
+        height: auto;
+        max-height: 500px;
+        object-fit: contain;
+        margin: 1.5rem auto;
+        border-radius: 8px;
+        display: block;
+      }
+
+      .post-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+      }
+
+      .post-body th,
+      .post-body td {
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        text-align: left;
+      }
+
+      .post-body th {
+        background-color: #f8fafc;
+        font-weight: 600;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .author-card,
+      .recent-posts,
+      .categories,
+      .tags-cloud {
+        background: white;
+        padding: 2rem;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .sidebar h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+      }
+
+      /* Author Card */
+      .author-info {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .author-avatar img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .author-details h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+      }
+
+      .author-details p {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      /* Recent Posts */
+      .recent-posts ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .recent-posts li a {
+        display: flex;
+        gap: 1rem;
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+      }
+
+      .recent-posts li a:hover {
+        color: var(--accent);
+      }
+
+      .recent-post-image {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+
+      .recent-post-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .recent-post-content {
+        flex: 1;
+      }
+
+      .recent-post-date {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .recent-post-content h4 {
+        font-size: 1rem;
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      /* Categories */
+      .categories ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .categories a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: block;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .categories a:hover {
+        color: var(--accent);
+        padding-left: 0.5rem;
+      }
+
+      /* Tags Cloud */
+      .tags {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        background: #f3f4f6;
+        color: var(--text-primary);
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .tag:hover {
+        background: var(--accent);
+        color: white;
+      }
+
+      /* Related Posts */
+      .related-posts {
+        padding: var(--section-padding);
+        background: var(--card-bg);
+      }
+
+      .related-posts h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .related-posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .related-post-card {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .related-post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(15, 31, 61, 0.15);
+      }
+
+      .related-post-image {
+        height: 200px;
+        overflow: hidden;
+      }
+
+      .related-post-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .related-post-card:hover .related-post-image img {
+        transform: scale(1.05);
+      }
+
+      .related-post-content {
+        padding: 2rem;
+      }
+
+      .related-post-content h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+      }
+
+      .related-post-content h3 a {
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .related-post-content h3 a:hover {
+        color: var(--accent);
+      }
+
+      .related-post-content p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Post Navigation */
+      .post-navigation {
+        padding: 2rem 0;
+        background: var(--card-bg);
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .navigation-links {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+      }
+
+      .prev-post,
+      .next-post {
+        flex: 1;
+        padding: 2rem;
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        border-radius: var(--border-radius-lg);
+      }
+
+      .prev-post:hover,
+      .next-post:hover {
+        background: white;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .nav-label {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .nav-title {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .prev-post {
+        text-align: left;
+      }
+
+      .next-post {
+        text-align: right;
+      }
+
+      /* Newsletter Section */
+      .newsletter-section {
+        padding: var(--section-padding);
+        background: var(--text-primary);
+        color: white;
+      }
+
+      .newsletter-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .newsletter-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: white;
+      }
+
+      .newsletter-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .newsletter-form {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .newsletter-form input {
+        padding: 1rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        min-width: 300px;
+        flex: 1;
+        max-width: 400px;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--text-primary);
+        color: white;
+        padding: 3rem 0 1.5rem;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+      }
+
+      .brand-logo img {
+        filter: brightness(0) invert(1);
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+      }
+
+      .brand-text span {
+        font-weight: 600;
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      .brand-text small {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .brand-description {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+      }
+
+      .footer-links h4,
+      .footer-contact h4 {
+        margin-bottom: 1.5rem;
+        color: white;
+        font-size: 1.1rem;
+      }
+
+      .footer-links ul,
+      .footer-contact ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .footer-links a,
+      .footer-contact a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover,
+      .footer-contact a:hover {
+        color: var(--accent);
+      }
+
+      .footer-contact li:last-child {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .footer-bottom {
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-bottom-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+
+      .footer-bottom-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .footer-bottom-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-bottom-links a:hover {
+        color: var(--accent);
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 1024px) {
+        .content-wrapper {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .sidebar {
+          order: 1;
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .author-card,
+        .recent-posts,
+        .categories,
+        .tags-cloud {
+          grid-column: span 2;
+        }
+      }
+
+      @media (max-width: 768px) {
+        :root {
+          --section-padding: 2.5rem 0;
+        }
+
+        .container {
+          padding: 0 1rem;
+        }
+
+        .post-meta {
+          gap: 1rem;
+        }
+
+        .main-content {
+          padding: 2rem 1.5rem;
+        }
+
+        .sidebar {
+          grid-template-columns: 1fr;
+        }
+
+        .author-card,
+        .recent-posts,
+        .categories,
+        .tags-cloud {
+          grid-column: span 1;
+          padding: 1.5rem;
+        }
+
+        .author-info {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: center;
+          text-align: center;
+        }
+
+        .related-posts-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .navigation-links {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .prev-post,
+        .next-post {
+          text-align: center;
+          padding: 1.5rem;
+        }
+
+        .newsletter-form {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .newsletter-form input {
+          min-width: 100%;
+          max-width: 100%;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .brand-logo {
+          justify-content: center;
+        }
+      }
+    </style>
+  </body>
+</html>

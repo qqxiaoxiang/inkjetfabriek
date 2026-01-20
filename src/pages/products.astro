@@ -1,0 +1,98 @@
+---
+import Header from '../components/Header.astro';
+import { categories } from '../data/products';
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Producten | NordicLine</title>
+    <meta
+      name="description"
+      content="Bekijk NordicLine productseries voor DTF, UV DTF en DTG inkten, cartridges en printoplossingen."
+    />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+
+      <main>
+        <section class="intro">
+          <p class="eyebrow">Productportfolio</p>
+          <h1>Onze collection cases per inktfamilie</h1>
+          <p>Bekijk alle OEM/ODM series, kies een categorie en ontdek de productsheet van elke batch.</p>
+        </section>
+        <section class="category-grid">
+          {categories.map((category) => (
+            <article>
+              <img src={category.heroImage} alt={category.title} loading="lazy" />
+              <div>
+                <h3>{category.title}</h3>
+                <p>{category.description}</p>
+                <a class="link-arrow" href={`/products/${category.slug}`}>Bekijk collectie →</a>
+              </div>
+            </article>
+          ))}
+        </section>
+      </main>
+
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+
+    <style>
+      /* 页面特定样式 */
+      :root {
+        --accent: #ff6f20;
+      }
+      
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .category-grid article {
+        border-radius: var(--border-radius-lg);
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .category-grid img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .category-grid div {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .link-arrow {
+        color: var(--accent);
+        font-weight: 600;
+        text-decoration: none;
+      }
+    </style>
+  </body>
+</html>

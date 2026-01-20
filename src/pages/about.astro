@@ -1,0 +1,300 @@
+---
+import Header from '../components/Header.astro';
+
+const heroMedia = {
+  image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682558065-2.jpg',
+  video: 'https://youtu.be/ZEzKOVaXGeE',
+};
+
+const productionHighlights = [
+  {
+    title: 'Inktproductie',
+    description: 'Fijnmalen, filtreren en stabiliseren op kleurprofielen voor Europese printers.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409693-%E7%94%BB%E6%9D%BF-1-%E6%8B%B7%E8%B4%9D.jpg',
+  },
+  {
+    title: 'Bulkdistributie',
+    description: 'Automatische dispensatie, sealing en traceerbare verpakkingen.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409685-%E7%94%BB%E6%9D%BF-1-%E6%8B%B7%E8%B4%9D-2.jpg',
+  },
+  {
+    title: 'Smart refill',
+    description: 'Volledige navulling, etikettering en kwaliteitscontrole binnen één flow.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409694-%E7%94%BB%E6%9D%BF-1.jpg',
+  },
+  {
+    title: 'R&amp;D labo',
+    description: 'Testen op compatibiliteit, kleurstabiliteit en viscositeit per printerfamilie.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409687-%E7%94%BB%E6%9D%BF-1-%E6%8B%B7%E8%B4%9D-3.jpg',
+  },
+  {
+    title: 'Testkamer',
+    description: 'Gebruikssituaties worden nagebootst met DTF, UV-inkten en sublimatieprints.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409690-%E7%94%BB%E6%9D%BF-1-%E6%8B%B7%E8%B4%9D-4.jpg',
+  },
+  {
+    title: 'Cartridge engineering',
+    description: 'Mallen, verpakking en duurzaam materiaalbeheer voor OEM-klanten.',
+    image: 'https://www.winnerjet.com/wp-content/uploads/2023/04/1682409692-%E7%94%BB%E6%9D%BF-1-%E6%8B%B7%E8%B4%9D-5.jpg',
+  },
+];
+
+const timeline = [
+  { year: '2008', title: 'Oprichting Dongguan', detail: 'Dongguan Yuncai Printing Consumables Co., Ltd. start productie.', image: 'https://www.winnerjet.com/wp-content/uploads/2023/05/2008%E5%B9%B4-scaled.jpg' },
+  { year: '2012', title: 'Internationale teams', detail: 'Sales- en exportteams openen wereldwijde kanalen.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2012%E5%B9%B4-scaled.jpg' },
+  { year: '2014', title: 'Eigen merk Winnerjet', detail: 'Registratie van merk en trademark voor handel.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2014%E5%B9%B4.jpg' },
+  { year: '2016', title: 'R&amp;D &amp; aftersales', detail: 'Advanced lab en klantgerichte supportteams.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2016%E5%B9%B4-scaled.jpg' },
+  { year: '2020', title: '100 miljoen omzet', detail: 'Milestone voor productievolume en teamgroei.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2020%E5%B9%B4-scaled.jpg' },
+  { year: '2022', title: 'Uitbreiding fabriek', detail: 'Nieuwe 4.000m² locatie en logistiek centrum.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2022%E5%B9%B4.jpg' },
+  { year: '2023', title: 'Internationale expos', detail: 'Nieuwe partners na Textile Printing Expo in Shanghai.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2023%E5%B9%B4-scaled.jpg' },
+  { year: '2024', title: 'Wereldwijde focus', detail: 'Jaarlijkse omzet richting 500 miljoen en globale dekking.', image: 'https://www.winnerjet.com/wp-content/uploads/2024/05/2024%E5%B9%B4-scaled.jpg' },
+];
+
+const stats = [
+  { label: 'Compatibele printers', value: '500+' },
+  { label: 'Tons inkt per jaar', value: '2.000+' },
+  { label: 'Tevreden medewerkers', value: '300+' },
+  { label: 'Verkochte landen', value: '100+' },
+];
+
+const partnerImages = [
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682560572-apexmic.png',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682560590-cosmosink.webp',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682560918-GG2.jpg',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682561127-splashjet2.jpg',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682561151-stsinks.png',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682561185-sublisplash.webp',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682561279-sublisure2.jpg',
+  'https://www.winnerjet.com/wp-content/uploads/2023/04/1682561419-纳思达2.jpg',
+];
+
+const certifications = [
+  '/img/certs/iso9001.svg',
+  '/img/certs/reach.svg',
+  '/img/certs/rohs.svg',
+  '/img/certs/continuous.svg',
+];
+
+const faq = [
+  {
+    question: 'Hoe snel leveren jullie samples naar Nederland?',
+    answer: 'We verzorgen binnen 48 uur een sample met pakkettracking en Nederlandstalige documentatie voor elke printerfamilie.',
+  },
+  {
+    question: 'Welke printers ondersteunen jullie?',
+    answer: 'Ons portfolio omvat DTF, UV, DTG, sublimatie en ecosolvent inkten voor merken als Epson, HP, Brother en Mimaki.',
+  },
+  {
+    question: 'Kunnen jullie private-label verpakkingen voorzien?',
+    answer: 'Ja, wij begeleiden private-label design, etikettering, handleidingen en logistieke verpakking voor Europese distributie.',
+  },
+];
+
+const contactChannels = [
+  { label: 'E-mail', value: 'info@nordicline.trade', href: 'mailto:info@nordicline.trade' },
+  { label: 'Telefonisch', value: '+31 20 123 4567', href: 'tel:+31201234567' },
+  { label: 'WhatsApp', value: '+31 6 5011 7570', href: 'https://api.whatsapp.com/send?phone=31650117570' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Over NordicLine | Nederlandse inkten &amp; printoplossingen</title>
+    <meta
+      name="description"
+      content="NordicLine levert Nederlandse inktproductie, certificeringen en maatwerkoplossingen voor Europese B2B-klanten."
+    />
+    <link rel="canonical" href="https://inknl.local/about" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Over NordicLine" />
+    <meta property="og:description" content="Premium inkten en printoplossingen vanuit Nederland." />
+    <meta property="og:image" content="https://www.winnerjet.com/wp-content/uploads/2023/04/1682409693-画板-1-拷贝.jpg" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+
+      <main>
+        <section id="hero" class="about-hero">
+          <div class="hero-content">
+            <p class="eyebrow">Over NordicLine</p>
+            <h1>Hollandse precisie, internationale inktleveringen</h1>
+            <p>
+              We combineren R&amp;D, productie en logistiek vanuit Nederlandse hubs zodat Europese partners 24/7
+              kunnen vertrouwen op traceerbare voorraad en consistente kleurkwaliteit.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#contact">Vraag een sample aan</a>
+              <a class="btn ghost" href="#production">Bekijk productie</a>
+            </div>
+            <div class="hero-stats">
+              {stats.map((stat) => (
+                <div class="stat">
+                  <p class="stat-value">{stat.value}</p>
+                  <p class="stat-label">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="hero-media">
+            <div class="media-frame">
+              <img src={heroMedia.image} alt="NordicLine productielijn" loading="lazy" />
+              <a class="media-play" href={heroMedia.video} target="_blank" rel="noreferrer">
+                <span></span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section id="production" class="production-grid">
+          <header>
+            <p class="eyebrow">Onze productie</p>
+            <h2>Elke stap uit de Winnerjet-referentie is op kwaliteit ingesteld</h2>
+            <p>
+              Van inktformule tot cartridge packaging: we testen, certificeren en verpakken per klant zodat de logistiek
+              soepel doorstroomt.
+            </p>
+          </header>
+          <div class="grid">
+            {productionHighlights.map((item) => (
+              <article>
+                <img src={item.image} alt={item.title} loading="lazy" />
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="custom-suites">
+          <header>
+            <p class="eyebrow">Op maat</p>
+            <h2>Custom inkten en printoplossingen in één hand</h2>
+            <p>
+              Onze labs ontwikkelen formules op basis van jouw printerfamilie, labels, verpakkingen en fulfilment.
+            </p>
+          </header>
+          <div class="custom-grid">
+            <article id="custom-ink" class="custom-card">
+              <p class="tag">Aangepaste inkt</p>
+              <h3>Formule &amp; proofing</h3>
+              <p>
+                Op basis van jouw vraag ontwikkelen wij kleur, dichtheid en viscositeit. Iedere batch krijgt
+                certificaties en testrapporten mee.
+              </p>
+              <ul>
+                <li>R&amp;D-lab met Europese kleurstandaarden</li>
+                <li>Test prints op DTF, UV, sublimatie en DTG</li>
+                <li>Batch-tracering &amp; documentatie</li>
+              </ul>
+            </article>
+            <article id="custom-solutions" class="custom-card">
+              <p class="tag">Printoplossingen</p>
+              <h3>Logistiek &amp; private label</h3>
+              <p>
+                Wij integreren design, verpakking en supply chain zodat je direct naar distributiecentra in Europa kan
+                verzenden.
+              </p>
+              <ul>
+                <li>Private label packaging en handleidingen</li>
+                <li>EU-conforme etikettering &amp; EMS verzendopties</li>
+                <li>Continu voorraadbeheer &amp; fulfilment</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="timeline">
+          <header>
+            <p class="eyebrow">Timeline</p>
+            <h2>Strategische groei sinds 2008</h2>
+          </header>
+          <div class="timeline-grid">
+            {timeline.map((event) => (
+              <article>
+                <div class="timeline-image">
+                  <img src={event.image} alt={event.title} loading="lazy" />
+                </div>
+                <div class="timeline-content">
+                  <span class="year">{event.year}</span>
+                  <h3>{event.title}</h3>
+                  <p>{event.detail}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="faq" class="faq">
+          <header>
+            <p class="eyebrow">Veelgestelde vragen</p>
+            <h2>Direct antwoord op uw logistieke en technische vragen</h2>
+          </header>
+          <div class="faq-list">
+            {faq.map((item) => (
+              <details>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section class="partners">
+          <header>
+            <p class="eyebrow">Partners &amp; certificaten</p>
+            <h2>Hergebruikte visuals blijven consistent met het referentieproject</h2>
+            <p>
+              De gebruikte logo's en certificaten zijn overgenomen uit de Winnerjet-referentie zodat de visuele
+              identiteit vertrouwd blijft.
+            </p>
+          </header>
+          <div class="partner-logos">
+            {partnerImages.map((logo) => (
+              <img src={logo} alt="Partnerlogo" loading="lazy" />
+            ))}
+          </div>
+          <div class="cert-grid">
+            {certifications.map((cert) => (
+              <img src={cert} alt="Certificering" loading="lazy" />
+            ))}
+          </div>
+        </section>
+
+        <section id="contact" class="cta">
+          <div>
+            <p class="eyebrow">Klaar om samen te werken?</p>
+            <h2>Vraag vandaag nog een technisch gesprek aan</h2>
+            <p>Vertel ons over je printer, volumes en verpakking. We reageren binnen 24 uur.</p>
+          </div>
+          <div class="contact-grid">
+            {contactChannels.map((channel) => (
+              <a class="contact-card" href={channel.href} target="_blank" rel="noreferrer">
+                <p class="contact-label">{channel.label}</p>
+                <p class="contact-value">{channel.value}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+
+
+  </body>
+</html>

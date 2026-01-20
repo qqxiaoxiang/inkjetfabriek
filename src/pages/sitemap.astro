@@ -1,0 +1,337 @@
+---
+import Header from '../components/Header.astro';
+import { blogs } from '../data/blog';
+import { categories, products } from '../data/products';
+
+// Group products by category
+const productsByCategory = products.reduce((acc, product) => {
+  if (!acc[product.category]) {
+    acc[product.category] = [];
+  }
+  acc[product.category].push(product);
+  return acc;
+}, {} as Record<string, typeof products>);
+
+// Get category title from slug
+const getCategoryTitle = (slug: string) => {
+  const category = categories.find(c => c.slug === slug);
+  return category ? category.title : slug;
+};
+---
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sitemap | NordicLine</title>
+    <meta name="description" content="Sitemap van NordicLine website" />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+    <style>
+      :root {
+        --text-primary: #0f1f3d;
+        --text-secondary: #5a6782;
+        --accent: #ff6f20;
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
+        --section-padding: 4rem 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      main {
+        padding: var(--section-padding);
+        background: #f8fafc;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        color: var(--text-primary);
+        margin: 2.5rem 0 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--accent);
+      }
+
+      h3 {
+        font-size: 1.4rem;
+        color: var(--text-primary);
+        margin: 2rem 0 1rem;
+      }
+
+      h4 {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        margin: 1.5rem 0 0.8rem;
+      }
+
+      .sitemap-content {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(15, 31, 61, 0.08);
+      }
+
+      .sitemap-section {
+        margin-bottom: 2.5rem;
+      }
+
+      .sitemap-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sitemap-list li {
+        margin: 0.8rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+      }
+
+      .sitemap-list li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+        font-weight: bold;
+      }
+
+      .sitemap-list a {
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .sitemap-list a:hover {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+
+      .category-group {
+        margin-left: 1.5rem;
+        margin-top: 1rem;
+        padding-left: 1.5rem;
+        border-left: 1px solid var(--border);
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .product-item {
+        padding: 0.8rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .product-item:hover {
+        background: #f1f5f9;
+      }
+
+      .blog-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .blog-item {
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .blog-item:hover {
+        background: #f1f5f9;
+      }
+
+      .blog-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+      }
+
+      .xml-sitemap-link {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .xml-sitemap-link:hover {
+        background: #e65c00;
+        text-decoration: none;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        h3 {
+          font-size: 1.2rem;
+        }
+
+        .sitemap-content {
+          padding: 1.5rem;
+        }
+
+        .container {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+
+      <main>
+        <div class="container">
+          <h1>Website Sitemap</h1>
+          
+          <!-- Link to XML sitemap -->
+          <a href="/sitemap.xml" class="xml-sitemap-link" target="_blank">
+            📄 XML Sitemap voor Zoekmachines
+          </a>
+
+          <div class="sitemap-content">
+            <!-- Hoofdpagina's -->
+            <section class="sitemap-section">
+              <h2>Hoofdpagina's</h2>
+              <ul class="sitemap-list">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">Over Ons</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/custom">Aangepaste Oplossingen</a></li>
+                <li><a href="/products">Producten</a></li>
+                <li><a href="/blog">Blog</a></li>
+              </ul>
+            </section>
+
+            <!-- Product Categorieën en Producten -->
+            <section class="sitemap-section">
+              <h2>Producten</h2>
+              
+              {categories.map(category => (
+                <div key={category.slug} class="category-group">
+                  <h3>
+                    <a href={`/products/${category.slug}`}>{category.title}</a>
+                  </h3>
+                  
+                  <div class="product-grid">
+                    {productsByCategory[category.slug]?.map(product => (
+                      <div key={product.slug} class="product-item">
+                        <a href={`/products/${product.category}/${product.slug}`}>
+                          {product.title}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+
+            <!-- Blog Artikelen -->
+            <section class="sitemap-section">
+              <h2>Blog Artikelen</h2>
+              
+              <div class="blog-list">
+                {blogs.map(blog => (
+                  <div key={blog.slug} class="blog-item">
+                    <a href={`/blog/${blog.slug}`}>
+                      <h4>{blog.title}</h4>
+                    </a>
+                    <div class="blog-meta">
+                      {new Date(blog.date).toLocaleDateString('nl-NL', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                      <span style="margin: 0 0.5rem;">•</span>
+                      {blog.category}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-brand">
+              <div class="brand-logo">
+                <img src="/img/logo.png" alt="NordicLine logo" width="160" height="68" loading="lazy" />
+                <div class="brand-text">
+                  <span>NordicLine</span>
+                  <small>Ink &amp; Print</small>
+                </div>
+              </div>
+              <p class="brand-description">Hoogwaardige inktfabrikant voor professionele afdrukken met ISO 9001 certificering.</p>
+            </div>
+            <div class="footer-links">
+              <h4>Snelkoppelingen</h4>
+              <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/products">Producten</a></li>
+                <li><a href="/about">Over Ons</a></li>
+                <li><a href="/contact">Contact</a></li>
+              </ul>
+            </div>
+            <div class="footer-contact">
+              <h4>Neem Contact Op</h4>
+              <ul>
+                <li><a href="mailto:ailujiaxiang@gmail">ailujiaxiang@gmail</a></li>
+                <li><a href="https://wa.me/8618477468950" target="_blank" rel="noopener noreferrer">WhatsApp: +86 184 7746 8950</a></li>
+                <li>Contactpersoon: Bob</li>
+                <li>Industrieweg 10, 1000 AA Amsterdam</li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div class="footer-bottom-content">
+              <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+              <div class="footer-bottom-links">
+                <a href="#">Privacybeleid</a>
+                <a href="#">Algemene Voorwaarden</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

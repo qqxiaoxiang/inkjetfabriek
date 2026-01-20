@@ -1,0 +1,148 @@
+---
+import Header from '../components/Header.astro';
+
+const contactMethods = [
+  {
+    title: 'WhatsApp met Bob',
+    value: '+86 184 7746 8950',
+    detail: 'Direct antwoord binnen 15 minuten op WhatsApp of WeChat.',
+    href: 'https://api.whatsapp.com/send?phone=8618477468950',
+  },
+  {
+    title: 'E-mail',
+    value: 'ailujiaxiang@gmail.com',
+    detail: 'Stuur specificaties, files en volume-inschattingen.',
+    href: 'mailto:ailujiaxiang@gmail.com',
+  },
+  {
+    title: 'Plan een videogesprek',
+    value: '24/7 beschikbaar',
+    detail: 'Laat ons weten wanneer je tijd hebt en we koppelen een technisch contact.',
+    href: 'mailto:ailujiaxiang@gmail.com',
+  },
+];
+
+const supportHighlights = [
+  'Snelle respons (max 24 uur) voor offertes en samples.',
+  'Nederlandse projectmanager begeleidt inkt-, cartridge- en logistiekvragen.',
+  'Certificeringen en labrapporten worden bij elke shipment geleverd.',
+];
+---
+
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact | NordicLine</title>
+    <meta
+      name="description"
+      content="Neem contact op met Bob via WhatsApp of e-mail voor Nederlandse inktleveringen en maatwerk oplossingen."
+    />
+    <link rel="icon" href="/img/fave.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="page">
+      <Header />
+
+      <main>
+        <section class="contact-hero">
+          <div class="hero-content">
+            <p class="eyebrow">Contacteer Bob</p>
+            <h1>Snel antwoord op jouw inkt- of printvraag</h1>
+            <p>
+              Onze Nederlandse service werkt samen met het Winnerjet R&amp;D-team zodat je binnen één dag een compleet
+              voorstel, monsters en logistiek plan hebt.
+            </p>
+            <div class="hero-actions">
+              <button class="btn primary" onclick="openInquiryForm()">WhatsApp Bob</button>
+              <button class="btn ghost" onclick="openInquiryForm()">Mail de scope</button>
+            </div>
+            <ul class="hero-list">
+              <li>24/7 bereikbaarheid voor Europese projectteams</li>
+              <li>Volledige traceerbaarheid en certificatie bij levering</li>
+            </ul>
+          </div>
+          <div class="hero-panel">
+            <div class="panel-card">
+              <p class="panel-label">Supportlijn</p>
+              <h2>Bob via WhatsApp</h2>
+              <p class="panel-number">+86 184 7746 8950</p>
+              <p class="panel-detail">Houd je printermodel en vraag klaar; je ontvangt snel een video of PDF.</p>
+              <button class="btn outline" onclick="openInquiryForm()">Start chat</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="contact-grid">
+          <header>
+            <p class="eyebrow">Contactkanalen</p>
+            <h2>Direct contact voor inkt, cartridges en logistiek</h2>
+          </header>
+          <div class="grid">
+            {contactMethods.map((method) => (
+              <article>
+                <h3>{method.title}</h3>
+                <p class="method-value">{method.value}</p>
+                <p>{method.detail}</p>
+                <button onclick="openInquiryForm()" class="link-arrow">
+                  Neem contact op →
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="form-section">
+          <header>
+            <p class="eyebrow">Vraag een offerte aan</p>
+            <h2>Vertel ons over je printer, volumes en verpakking</h2>
+          </header>
+          <div class="contact-form-container">
+            <button class="btn primary large" onclick="openInquiryForm()">Open Verzoekformulier</button>
+            <p class="form-note">Klik op de knop hierboven om ons contactformulier te openen. Ons team zal binnen 24 uur bij je terug komen.</p>
+          </div>
+        </section>
+
+        <section class="support">
+          <header>
+            <p class="eyebrow">Ondersteuning</p>
+            <h2>Wat je van NordicLine mag verwachten</h2>
+          </header>
+          <ul>
+            {supportHighlights.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="map-section">
+          <header>
+            <p class="eyebrow">Waar we zitten</p>
+            <h2>Ons kantoor is virtueel in Amsterdam en fysiek dichtbij jouw partners</h2>
+          </header>
+          <div class="map-frame">
+            <iframe
+              loading="lazy"
+              src="https://maps.google.com/maps?q=Amsterdam%20Netherlands&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              title="NordicLine locatie"
+            ></iframe>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>© {new Date().getFullYear()} NordicLine. Alle rechten voorbehouden.</p>
+      </footer>
+    </div>
+
+
+  </body>
+</html>

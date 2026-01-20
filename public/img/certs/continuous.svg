@@ -1,0 +1,13 @@
+﻿<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grC" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#00b468" />
+      <stop offset="100%" stop-color="#00f299" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="18" fill="url(#grC)" />
+  <path d="M60 60h80v20H80v40h40" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <circle cx="70" cy="130" r="12" fill="#ffffff" />
+  <circle cx="130" cy="130" r="12" fill="#ffffff" />
+  <text x="100" y="175" text-anchor="middle" font-size="16" font-weight="600" fill="#ffffff" font-family="Space Grotesk, sans-serif">Continu</text>
+</svg>
