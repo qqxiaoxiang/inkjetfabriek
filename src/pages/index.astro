@@ -560,38 +560,51 @@ const certificates = [
 
       .certificates-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 3rem;
         justify-items: center;
       }
 
       .certificate-card {
         background: white;
         border-radius: var(--border-radius-lg);
-        padding: 1.5rem;
+        padding: 2rem;
         box-shadow: var(--shadow-lg);
         text-align: center;
-        max-width: 400px;
+        max-width: 600px;
+        width: 100%;
       }
 
       .certificate-image {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        border-radius: var(--border-radius-md);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       }
 
       .certificate-image img {
-        max-width: 100%;
+        width: 100%;
         height: auto;
-        border-radius: var(--border-radius-md);
+        min-height: 300px;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+      }
+
+      .certificate-card:hover .certificate-image img {
+        transform: scale(1.02);
       }
 
       .certificate-content h3 {
-        font-size: 1.3rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
       }
 
       .certificate-content p {
         color: var(--text-secondary);
         margin: 0;
+        font-size: 1.1rem;
+        line-height: 1.6;
       }
 
       /* Why Choose Us */
